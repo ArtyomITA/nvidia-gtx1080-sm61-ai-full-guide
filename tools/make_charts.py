@@ -93,7 +93,7 @@ ROWS = [
     ("Ternary Bonsai 2 9B decode", "PQ2_0 + MTP, five CUDA changes, same logits", 55.9, 84.4, "tok/s", False, "55.9", "84.4 tok/s", None),
     ("MiniCPM5-2B full SFT (BAdam)", "backward stops at the active block, identical losses", 354, 531, "tok/s", False, "354", "531 tok/s", None),
     ("CUDA graphs on a MoE", "Ling-3.0-tiny Q6_K, llama.cpp #27721", 41.2, 57.6, "tok/s", False, "41.2", "57.6 tok/s", None),
-    ("LFM2.5-2.6B + DSpark draft", "local assistant, decode", 64, 78, "tok/s", False, "64", "78 to 100 tok/s", "1.2 to 1.6x"),
+    ("LFM2.5-2.6B + DSpark draft", "local assistant, decode", 64, 78, "tok/s", False, "64", "78-100", "≤1.6x"),
     ("PQ2_0 mat-vec, merged upstream", "PrismML llama.cpp #368, server decode", 55.7, 65.3, "tok/s", False, "55.7", "65.3 tok/s", None),
     ("CUDA graphs on a dense 9B", "llama.cpp #27721, server decode", 26.3, 28.0, "tok/s", False, "26.3", "28.0 tok/s", None),
 ]
@@ -118,12 +118,12 @@ def leaderboard():
         name, detail, b, a, unit, lower, sb, sa, flabel = r
         o.append(text(32, y + 20, name, 16, TEXT, "700"))
         o.append(text(32, y + 40, detail, 12, MUTED))
-        mx = 100 if "to 100" in sa else max(b, a)  # the draft row draws up to the top of its range
+        mx = 100 if "-100" in sa else max(b, a)  # the draft row draws up to the top of its range
         lb, la = bw * b / mx, bw * a / mx
         o.append(f'<rect x="{bx}" y="{y + 4}" width="{lb:.1f}" height="14" rx="4" fill="{GREY}"/>')
         o.append(text(bx + lb + 8, y + 16, sb, 12, MUTED, family=MONO))
         o.append(f'<rect x="{bx}" y="{y + 24}" width="{la:.1f}" height="14" rx="4" fill="url(#gr)"/>')
-        if "to 100" in sa:  # the draft case: solid to 78, lighter up to 100
+        if "-100" in sa:  # the draft case: solid to 78, lighter up to 100
             ext = bw * 100 / mx - la
             o.append(f'<rect x="{bx + la:.1f}" y="{y + 24}" width="{ext:.1f}" height="14" rx="4" fill="{GREEN}" opacity="0.35"/>')
             o.append(text(bx + la + ext + 8, y + 36, sa, 12, GREEN, "700", family=MONO))

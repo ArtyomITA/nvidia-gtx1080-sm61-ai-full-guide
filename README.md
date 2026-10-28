@@ -29,7 +29,7 @@ I wrote it because the card is eight years old, still common, and mostly ignored
 | Dense 9B decode | 26.3 → **28.0 tok/s** (**+6.4%**) | same one line |
 | MiniMax-H3 video clip, 8 GB | 674.5 → **175.5 s** (**-74%**) | disk streaming with overlap, tile-group VAE, Q3 + turbo recipe |
 | H3 attention kernel | 1875 → **944 ms** (**2.0x**) | int8 `dp4a` |
-| H3 sparse attention, 15 s clip | 397 to 404 → **240 to 245 s** per turbo step (**1.65x**) | block-sparse port + conditioning prefix |
+| H3 sparse attention, 15 s clip | 397 to 404 → **240 to 245 s** per turbo step (**1.65x**) | block-sparse port; a conditioning prefix keeps the speech ([docs/06](docs/06-diffusion-image-and-motion.md)) |
 | Ternary LoRA training | 20.2 → **2.7 s** per example (**7.5x**) | unpack kernel, shared image prefix |
 | 8B embeddings on 8 GB | 14,000 sentences in **3 h 16 min**, cosine **0.999956** | RAM offload + batching by exact length |
 | Upstream | **2 merged**, **1 open** pull request | llama.cpp, PrismML fork, stable-diffusion.cpp |
@@ -179,7 +179,7 @@ The single most useful fact about this card: at batch size one, decoding is boun
 | Bonsai-Image 4B (WebGPU) | image generation at 512x512 | device lost, then about 35 s | tiled VAE decode | [bonsai-webgpu-tiled-vae-fix](https://github.com/ArtyomITA/bonsai-webgpu-tiled-vae-fix) |
 | MiniMax-H3 (audio + video DiT) | 320x576, 39-frame clip, stable-diffusion.cpp | 674.5 to 175.5 s (-74%) | disk streaming with overlap, VAE in tile groups, Q3 + turbo recipe | [docs/06](docs/06-diffusion-image-and-motion.md#64-video-and-image-generation-minimax-h3-on-8-gb) |
 | MiniMax-H3 | attention kernel | 1875 to 944 ms at N=15529 (2.0x) | int8 `dp4a` attention (code release pending) | [docs/06](docs/06-diffusion-image-and-motion.md#645-8-bit-attention-for-the-diffusion-transformer-code-release-pending) |
-| MiniMax-H3 | sparse attention, 15 s clip | 397-404 to 240-245 s per turbo step (1.65x) | block-sparse port + conditioning prefix (code release pending) | [docs/06](docs/06-diffusion-image-and-motion.md#646-sparse-attention-and-the-conditioning-prefix-code-release-pending) |
+| MiniMax-H3 | sparse attention, 15 s clip | 397-404 to 240-245 s per turbo step (1.65x) | block-sparse port, pure sparse run; the conditioning prefix that keeps the speech is measured separately (code release pending) | [docs/06](docs/06-diffusion-image-and-motion.md#646-sparse-attention-and-the-conditioning-prefix-code-release-pending) |
 | FLUX.3 Image Klein Q8 | 768x1344, 16 steps | out of memory, then 288.7 s sampling | graph cuts, 44 segments (code release pending) | [docs/06](docs/06-diffusion-image-and-motion.md#648-flux3-image-klein-on-8-gb-code-release-pending) |
 | FlyToLLM (166,700-neuron spiking LM) | training update | 0.65 to 0.38 s | CUDA Graph FP32 + fused gather-accumulate kernel | [flytollm](https://github.com/ArtyomITA/flytollm) |
 
