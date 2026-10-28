@@ -1,0 +1,23 @@
+gtx-1080
+pascal
+sm61
+cuda
+llama-cpp
+gguf
+local-llm
+low-vram
+8gb-vram
+consumer-gpu
+inference-optimization
+quantization
+speculative-decoding
+lora
+stable-diffusion-cpp
+int8
+dp4a
+ternary
+minicpm
+ai-guide
+
+# Suggested GitHub description (350 characters max):
+# Everything I made run fast on a 2016 GPU with 8 GB: llama.cpp kernels, CUDA graphs, speculative decoding, ternary models, LoRA training, video diffusion on a GTX 1080 (sm_61). Measured, with sources.
